@@ -1,30 +1,69 @@
-# React + TypeScript + Vite
+# table-plugin-React-Ts
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+`table-plugin-React-Ts` is a React component designed to render dynamic tables with configurable columns and data, utilizing TypeScript for type safety. This component simplifies the process of displaying tabular data in React applications, ensuring that developers can customize the table's columns and data according to their needs.
 
-Currently, two official plugins are available:
+## Installation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+To install the `table-plugin-React-Ts`, you can use npm or yarn as follows:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+npm install table-plugin-React-Ts
+# or
+yarn add table-plugin-React-Ts
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Example Usage in TSX
+
+Here's a detailed example of how to use the `Table` component in a TSX file:
+
+```tsx
+import React from "react";
+import { Table } from "table-plugin-React-Ts";
+
+const columns = [
+  { title: "First Name", dataKey: "firstName" },
+  { title: "Last Name", dataKey: "lastName" },
+  { title: "Email", dataKey: "email" },
+];
+
+const data = [
+  { firstName: "John", lastName: "Doe", email: "john.doe@example.com" },
+  { firstName: "Jane", lastName: "Doe", email: "jane.doe@example.com" },
+];
+
+const App: React.FC = () => {
+  return (
+    <div>
+      <h1>Dynamic Table Example</h1>
+      <Table columns={columns} data={data} />
+    </div>
+  );
+};
+
+export default App;
+```
+
+## Props
+
+The 'Table' component accepts the following props:
+
+- Columns (TableConfig[]): An aaray of configuration objects of the table. Each object includes:
+  &nbsp;
+
+  - title('string'): The display of the column.
+  - dataKey('string'): The key from the data objects that holds the value for taht column.
+    &nbsp;
+
+- Data('Record<string, string>[]'): An array of objects, each representing a row of data, where each key should match a 'dataKey' specified in columns.
+
+```ts
+interface TableConfig {
+  title: string;
+  dataKey: string;
+}
+
+interface TableProps {
+  columns: TableConfig[];
+  data: Record<string, string>[];
+}
+```
