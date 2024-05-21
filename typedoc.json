@@ -1,0 +1,5 @@
+{
+    "out": "lib/docs",
+    "entryPoints": ["lib/main.ts"],
+    "entryPointStrategy": "expand"
+}
