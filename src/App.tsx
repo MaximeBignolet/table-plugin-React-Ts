@@ -137,7 +137,7 @@ function App() {
       zipCode: "17000",
     },
     {
-      firstName: "Max",
+      firstName: "Thomas",
       lastName: "Bgt",
       startDate: "05/05/2024",
       department: "Sales",

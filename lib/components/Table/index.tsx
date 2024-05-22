@@ -1,53 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { TableConfig } from "./Types/TableConfig";
 import "./styles.modules.css";
-import { showItemsPerPage } from "./Utils/FiltersItemsPerPage";
+import { Paginate } from "../Pagination";
 
-/**
- * Props for the Table component.
- * @property {TableConfig[]} columns - Array of configurations for each column of the table.
- * @property {Record<string, string>[]} data - Array of objects, each representing a row of data.
- */
 interface TableProps {
   columns: TableConfig[];
   data: Record<string, string>[];
 }
 
-/**
- * Renders a table with dynamic columns and data.
- *
- * Example usage:
- * ```jsx
- * const columns = [
- *   { title: "First Name", dataKey: "firstName" },
- *   { title: "Last Name", dataKey: "lastName" }
- * ];
- * const data = [
- *   { firstName: "John", lastName: "Doe" },
- *   { firstName: "Jane", lastName: "Doe" }
- * ];
- *
- * <Table columns={columns} data={data} />
- * ```
- *
- * @component
- * @param {TableProps} props - The props for the Table component.
- * @returns {React.ReactElement} - A React Element representing a table.
- */
 export const Table = ({ columns, data }: TableProps): React.ReactElement => {
-  const [itemsPerPage, setItemsPerPage] = useState(data);
+  const [displayItems, setDisplayItems] = useState(data);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const handlePagination = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
 
   const handleChangeItemsPerPage = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const numItems = Number(e.target.value);
-    const filteredData = showItemsPerPage(data, numItems);
-    setItemsPerPage(filteredData);
+    setItemsPerPage(numItems);
+    setCurrentPage(1);
   };
 
   useEffect(() => {
-    setItemsPerPage(showItemsPerPage(data, 10));
-  }, [data]);
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    setDisplayItems(data.slice(start, end));
+  }, [data, currentPage, itemsPerPage]);
 
   return (
     <div>
@@ -76,7 +58,7 @@ export const Table = ({ columns, data }: TableProps): React.ReactElement => {
           </tr>
         </thead>
         <tbody>
-          {itemsPerPage.map((row, rowIndex) => (
+          {displayItems.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {columns.map((col, colIndex) => (
                 <td key={colIndex}>{row[col.dataKey]}</td>
@@ -85,6 +67,18 @@ export const Table = ({ columns, data }: TableProps): React.ReactElement => {
           ))}
         </tbody>
       </table>
+      <div className="display_items_per_page">
+        <p>
+          Showing 1 to {displayItems.length} of {data.length}
+        </p>
+        <div className="pagination_container">
+          <Paginate
+            currentPage={currentPage}
+            totalPages={Math.ceil(data.length / itemsPerPage)}
+            handlePagination={handlePagination}
+          />
+        </div>
+      </div>
     </div>
   );
 };
