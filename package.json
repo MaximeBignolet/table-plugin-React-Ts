@@ -1,7 +1,8 @@
 {
   "name": "table-plugin-react-ts",
-  "private": true,
-  "version": "0.0.0",
+  "private": false,
+  "version": "0.0.1",
+  "description": "A React component to render dynamic tables with configurable columns and data, using TypeScript.",
   "type": "module",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -11,6 +12,24 @@
   "sideEffects": [
     "**/*.css"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MaximeBignolet/table-plugin-React-Ts"
+  },
+  "bugs": {
+    "url": "https://github.com/MaximeBignolet/table-plugin-React-Ts/issues"
+  },
+  "keywords": [
+    "react",
+    "table",
+    "react-table",
+    "data-grid",
+    "typescript",
+    "react-component",
+    "dynamic-tables",
+    "data-visualization"
+  ],
+  "author": "Maxime Bignolet",
   "scripts": {
     "dev": "vite",
     "build": "tsc --p ./tsconfig-build.json && vite build",
@@ -19,7 +38,7 @@
     "generate-docs": "typedoc",
     "preview": "vite preview"
   },
-  "dependencies": {
+  "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -39,5 +58,9 @@
     "vite": "^5.2.0",
     "vite-plugin-dts": "^3.9.1",
     "vite-plugin-lib-inject-css": "^2.1.1"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }

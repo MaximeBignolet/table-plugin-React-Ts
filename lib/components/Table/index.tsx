@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TableConfig } from "./Types/TableConfig";
 import "./styles.modules.css";
+import { showItemsPerPage } from "./Utils/FiltersItemsPerPage";
 
 /**
  * Props for the Table component.
@@ -34,8 +35,36 @@ interface TableProps {
  * @returns {React.ReactElement} - A React Element representing a table.
  */
 export const Table = ({ columns, data }: TableProps): React.ReactElement => {
+  const [itemsPerPage, setItemsPerPage] = useState(data);
+
+  const handleChangeItemsPerPage = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const numItems = Number(e.target.value);
+    const filteredData = showItemsPerPage(data, numItems);
+    setItemsPerPage(filteredData);
+  };
+
+  useEffect(() => {
+    setItemsPerPage(showItemsPerPage(data, 10));
+  }, [data]);
+
   return (
     <div>
+      <div className="btn_container">
+        Show{" "}
+        <select
+          name="itemsPerPage"
+          id="itemsPerPage"
+          onChange={handleChangeItemsPerPage}
+        >
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        entries
+      </div>
       <table>
         <thead>
           <tr>
@@ -47,7 +76,7 @@ export const Table = ({ columns, data }: TableProps): React.ReactElement => {
           </tr>
         </thead>
         <tbody>
-          {data.map((row, rowIndex) => (
+          {itemsPerPage.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {columns.map((col, colIndex) => (
                 <td key={colIndex}>{row[col.dataKey]}</td>
