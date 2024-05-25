@@ -20,7 +20,7 @@ export const App = () => {
     { title: "ID", dataKey: "id" },
   ];
 
-  const columnsToSearch = ["firstname", 'id'];
+  const columnsToSearch = ["firstname", "id"];
 
   // const data = [
   //   {

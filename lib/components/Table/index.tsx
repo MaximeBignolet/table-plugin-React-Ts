@@ -46,6 +46,8 @@ export const Table = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [lengthFilteredData, setLengthFilteredData] = useState<number | undefined>(0);
+  const [filteredDataArrayState, setFilteredDataArrayState] = useState<Record<string, any>[]>([]);
+  const filteredDataArray: Record<string, any>[] = [];
 
   const handlePagination = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -59,29 +61,40 @@ export const Table = ({
       setLengthFilteredData(0);
       return;
     }
-    const filteredData = data.filter((item) =>
-      Object.entries(item).some(([key, value]) =>
-        columnQuery.includes(key) && value.toString().toLowerCase().includes(searchValue)
-      )
-    );
-    setDisplayItems(filteredData.slice(0, itemsPerPage));
-    setLengthFilteredData(filteredData.length);
+    data.forEach((item) => {
+      const entries = Object.entries(item).filter(([key]) =>
+        columnQuery.includes(key)
+      );
+      const valuesToCompare = entries.map((el) => el[1].toString().toLocaleLowerCase());
+      const commonValues = valuesToCompare.filter((value) => value.toString().toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()));
+      if (commonValues.length > 0) {
+        filteredDataArray.push(item);
+        setLengthFilteredData(filteredDataArray.length);
+      }
+    });
+    setFilteredDataArrayState(filteredDataArray);
+    setDisplayItems(filteredDataArray.slice(0, itemsPerPage));
+    setLengthFilteredData(filteredDataArray.length);
   }
 
   const handleChangeItemsPerPage = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    setItemsPerPage(Number(e.target.value)) ;
+    setItemsPerPage(Number(e.target.value));
     setCurrentPage(1);
   };
 
   useEffect(() => {
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
-    const filteredData = lengthFilteredData === 0 ? data : data.slice(0, lengthFilteredData);
 
-    setDisplayItems(filteredData.slice(start, end));
-  }, [currentPage, itemsPerPage, data, lengthFilteredData]);
+    if(lengthFilteredData === 0) { 
+    setDisplayItems(data.slice(start, end));
+    } else {
+      setDisplayItems(filteredDataArrayState.slice(start, end));
+    }
+    
+  }, [currentPage, itemsPerPage, data, lengthFilteredData, filteredDataArrayState]);
 
   return (
     <div>
