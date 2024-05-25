@@ -12,8 +12,7 @@ export const Paginate = ({
   return (
     <div>
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
-        <a
-          href="#"
+        <button
           key={pageNumber}
           onClick={() => handlePagination(pageNumber)}
           className={
@@ -21,7 +20,7 @@ export const Paginate = ({
           }
         >
           {pageNumber}
-        </a>
+        </button>
       ))}
     </div>
   );

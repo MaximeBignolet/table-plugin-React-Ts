@@ -47,7 +47,7 @@ export default App;
 
 The 'Table' component accepts the following props:
 
-- Columns (TableConfig[]): An aaray of configuration objects of the table. Each object includes:
+- Columns (TableConfig[]): An array of configuration objects of the table. Each object includes:
   &nbsp;
 
   - title('string'): The display of the column.
@@ -64,6 +64,6 @@ interface TableConfig {
 
 interface TableProps {
   columns: TableConfig[];
-  data: Record<string, string>[];
+  data: Record<string, any>[];
 }
 ```

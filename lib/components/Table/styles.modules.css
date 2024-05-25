@@ -5,7 +5,22 @@ body {
 }
 
 .btn_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 25px;
+}
+
+.select_container{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form_search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 table {
