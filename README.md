@@ -31,11 +31,13 @@ const data = [
   { firstName: "Jane", lastName: "Doe", email: "jane.doe@example.com" },
 ];
 
+const columnToSearch = ['firstName', "email"]
+
 const App: React.FC = () => {
   return (
     <div>
       <h1>Dynamic Table Example</h1>
-      <Table columns={columns} data={data} />
+      <Table columns={columns} data={data} columnQuery={columnToSearch}/>
     </div>
   );
 };
@@ -54,7 +56,11 @@ The 'Table' component accepts the following props:
   - dataKey('string'): The key from the data objects that holds the value for taht column.
     &nbsp;
 
-- Data('Record<string, string>[]'): An array of objects, each representing a row of data, where each key should match a 'dataKey' specified in columns.
+- Data ('Record<string, string>[]'): An array of objects, each representing a row of data, where each key should match a 'dataKey' specified in columns.
+ &nbsp;
+
+- ColumnQuery ('string[]'):  Specifies the columns that should be included in the search functionality.
+
 
 ```ts
 interface TableConfig {

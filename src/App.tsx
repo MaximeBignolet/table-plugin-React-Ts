@@ -1,268 +1,51 @@
 import "./App.css";
 import { Table } from "../";
-import { useEffect, useState } from "react";
 
 export const App = () => {
-  const [userData, setUserData] = useState();
-
-  useEffect(() => {
-    async function fetchData() {
-      const resp = await fetch("https://jsonplaceholder.org/users");
-      const jsonResp = await resp.json();
-      setUserData(jsonResp);
-    }
-    fetchData();
-  }, []);
-
-  const columns = [
-    { title: "First Name", dataKey: "firstname" },
-    { title: "Last Name", dataKey: "lastname" },
-    { title: "ID", dataKey: "id" },
+  const data = [
+    {
+      id: 1,
+      firstName: "John",
+      lastName: "Doe",
+      dateOfBirth: new Date("1990-01-01"),
+    },
+    {
+      id: 2,
+      firstName: "Jane",
+      lastName: "Smith",
+      dateOfBirth: new Date("1995-05-10"),
+    },
+    {
+      id: 3,
+      firstName: "Alice",
+      lastName: "Johnson",
+      dateOfBirth: new Date("1988-09-15"),
+    },
+    {
+      id: 4,
+      firstName: "Bob",
+      lastName: "Williams",
+      dateOfBirth: new Date("1992-03-25"),
+    },
   ];
 
-  const columnsToSearch = ["firstname", "id"];
+  const columns = [
+    { title: "First Name", dataKey: "firstName" },
+    { title: "Last Name", dataKey: "lastName" },
+    { title: "Date of Birth", dataKey: "dateOfBirth" },
+  ];
 
-  // const data = [
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Thomas",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  //   {
-  //     firstName: "Max",
-  //     lastName: "Bgt",
-  //     startDate: "05/05/2024",
-  //     department: "Sales",
-  //     dateOfBirth: "27/01/1999",
-  //     street: "1 rue de l'avenue",
-  //     city: "La Rochelle",
-  //     state: "France",
-  //     zipCode: "17000",
-  //   },
-  // ];
+  const columnsToSearch = ["firstName", "dateOfBirth"];
+  const colmunToSort = ["firstName", 'dateOfBirth', 'lastName'];
 
   return (
     <div>
-      {userData ? (
+      {data ? (
         <Table
           columns={columns}
-          data={userData}
+          data={data}
           columnQuery={columnsToSearch}
+          colmunToSort={colmunToSort}
         />
       ) : (
         <p>Erreur</p>

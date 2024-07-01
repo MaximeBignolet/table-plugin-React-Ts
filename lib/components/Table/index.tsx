@@ -3,56 +3,69 @@ import React, { useEffect, useState } from "react";
 import { TableConfig } from "./Types/TableConfig";
 import "./styles.modules.css";
 import { Paginate } from "../Pagination";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSort } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * Props for the Table component.
- * @property {TableConfig[]} columns - Array of configurations for each column of the table.
- * @property {Record<string, string>[]} data - Array of objects, each representing a row of data.
  */
 export interface TableProps {
+  /**
+   * Array of configurations for each column of the table.
+   */
   columns: TableConfig[];
+  /**
+   * Array of objects, each representing a row of data.
+   */
   data: Record<string, any>[];
+  /**
+   * Array of column names to be included in the search functionality.
+   */
   columnQuery: string[];
+  /**
+   * Array of column names to be sorted.
+   */
+  colmunToSort: string[];
 }
 
 /**
- * Renders a table with dynamic columns and data.
+ * Table component that displays data in a tabular format with pagination and search functionality.
  *
- * Example usage:
- * ```jsx
- * const columns = [
- *   { title: "First Name", dataKey: "firstName" },
- *   { title: "Last Name", dataKey: "lastName" }
- * ];
- * const data = [
- *   { firstName: "John", lastName: "Doe" },
- *   { firstName: "Jane", lastName: "Doe" }
- * ];
- *
- * <Table columns={columns} data={data} />
- * ```
- *
- * @component
- * @param {TableProps} props - The props for the Table component.
- * @returns {React.ReactElement} - A React Element representing a table.
+ * @param columns - An array of column objects that define the table columns.
+ * @param data - An array of data objects to be displayed in the table.
+ * @param columnQuery - An array of column names to be included in the search functionality.
+ * @param colmunToSort - An array of column names to be sorted.
+ * @returns A React element representing the table component.
  */
-
 export const Table = ({
   columns,
   data,
   columnQuery,
+  colmunToSort
 }: TableProps): React.ReactElement => {
   const [displayItems, setDisplayItems] = useState<Record<string, any>[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [lengthFilteredData, setLengthFilteredData] = useState<number | undefined>(0);
   const [filteredDataArrayState, setFilteredDataArrayState] = useState<Record<string, any>[]>([]);
+  const [hasUserClick, setHasUserClick] = useState<boolean>(false);
   const filteredDataArray: Record<string, any>[] = [];
+  const filteredColumnToSort: Record<string, any>[] = [];
 
+  /**
+   * Handles the pagination functionality by updating the current page number.
+   *
+   * @param pageNumber - The page number to navigate to.
+   */
   const handlePagination = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
 
+  /**
+   * Handles the search functionality by filtering the data based on the search value.
+   *
+   * @param e - The change event object.
+   */
   function handleSearchOnChange(e: React.ChangeEvent<HTMLInputElement>) {
     const searchValue = e.target.value.toLocaleLowerCase();
 
@@ -77,6 +90,56 @@ export const Table = ({
     setLengthFilteredData(filteredDataArray.length);
   }
 
+  //Filtrer par date aux différents formats
+
+  /**
+   * Handles the column sorting functionality.
+   *
+   * @param e - The click event object.
+   */
+  const getColumnToSort = (e: any) => {
+    const colId = e.target.id;
+    if (!colmunToSort.includes(colId)) return;
+    data.forEach((item) => {
+      const entriesToSort = Object.entries(item).filter(([key]) =>
+        colmunToSort.includes(key)
+      );
+      entriesToSort.find(([key]) => {
+        if (key === colId) {
+          filteredColumnToSort.push(item);
+        }
+      }
+      );
+      setHasUserClick(!hasUserClick)
+    })
+    filteredColumnToSort.sort((a, b) => {
+      const aValue = a[colId];
+      const bValue = b[colId];
+    
+      const aValueIsDate = aValue instanceof Date;
+      const bValueIsDate = bValue instanceof Date;
+    
+      if (aValueIsDate && bValueIsDate) {
+        return hasUserClick ? bValue.getTime() - aValue.getTime() : aValue.getTime() - bValue.getTime();
+      }
+    
+      if (!hasUserClick) {
+        if (aValue < bValue) { return -1; }
+        if (aValue > bValue) { return 1; }
+      } else {
+        if (aValue > bValue) { return -1; }
+        if (aValue < bValue) { return 1; }
+      }
+      return 0;
+    });    
+    setDisplayItems(filteredColumnToSort.slice(0, itemsPerPage));
+  }
+
+  /**
+   * Handles the change event of the items per page select element.
+   *
+   * @param e - The change event object.
+   */
   const handleChangeItemsPerPage = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -88,12 +151,11 @@ export const Table = ({
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
 
-    if(lengthFilteredData === 0) { 
-    setDisplayItems(data.slice(start, end));
+    if (lengthFilteredData === 0) {
+      setDisplayItems(data.slice(start, end));
     } else {
       setDisplayItems(filteredDataArrayState.slice(start, end));
     }
-    
   }, [currentPage, itemsPerPage, data, lengthFilteredData, filteredDataArrayState]);
 
   return (
@@ -131,9 +193,9 @@ export const Table = ({
       <table>
         <thead>
           <tr>
-            {columns.map((col, index) => (
-              <th scope="col" key={index}>
-                {col.title}
+            {columns.map((col) => (
+              <th scope="col" key={col.dataKey} id={col.dataKey} onClick={getColumnToSort} className="cursor-pointer">
+                {col.title} {colmunToSort.includes(col.dataKey) ? <FontAwesomeIcon icon={faSort} /> : null}
               </th>
             ))}
           </tr>
@@ -142,7 +204,11 @@ export const Table = ({
           {displayItems?.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {columns.map((col, colIndex) => (
-                <td key={colIndex}>{row[col.dataKey]}</td>
+                <td key={colIndex}>
+                  {row[col.dataKey] instanceof Date ?
+                    row[col.dataKey].toLocaleDateString() :
+                    row[col.dataKey]}
+                </td>
               ))}
             </tr>
           ))}
